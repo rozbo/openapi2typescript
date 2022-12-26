@@ -2,15 +2,24 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "target": "ES2015",
-    "module": "CommonJS",
+    "target": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "importHelpers": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "declaration": true
   },
-  "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules", "lib", "es", "dist", "**/__tests__", "**/__test__", "**/demo"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "es",
+    "dist",
+    "**/__tests__",
+    "**/__test__",
+    "**/demo"
+  ]
 }
