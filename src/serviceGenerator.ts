@@ -346,20 +346,26 @@ class ServiceGenerator {
         return c.length > 0 ? c : null;
     };
 
-    public getFuncationName(data: APIDataType) {
+    public getFunctionName(data: APIDataType) {
+        // 尝试执行这个hook，如果它返回的有值，则直接使用
+        // 如果它没有返回值，则当作它只是修改参数,或者调试输出
+        if (this.config.hook && this.config.hook.customFunctionName) {
+            const ret = this.config.hook.customFunctionName(data);
+            if (ret) {
+                return ret;
+            }
+        }
         // 获取路径相同部分
-        const pathBasePrefix = this.getBasePrefix(Object.keys(this.openAPIData.paths));
-        return this.config.hook && this.config.hook.customFunctionName
-            ? this.config.hook.customFunctionName(data)
-            : data.operationId
-                ? this.resolveFunctionName(stripDot(data.operationId), data.method)
-                : data.method + this.genDefaultFunctionName(data.path, pathBasePrefix);
+        // const pathBasePrefix = this.getBasePrefix(Object.keys(this.openAPIData.paths));
+        return data.operationId
+            ? this.resolveFunctionName(stripDot(data.operationId), data.method)
+            : data.method + this.genDefaultFunctionName(data.path);
     }
 
     public getTypeName(data: APIDataType) {
         const namespace = this.config.namespace ? `${this.config.namespace}.` : '';
         const typeName = this.config?.hook?.customTypeName?.(data)
-            || this.getFuncationName(data);
+            || this.getFunctionName(data);
 
         return resolveTypeName(`${namespace}${typeName ?? data.operationId}Params`);
     }
@@ -393,7 +399,7 @@ class ServiceGenerator {
                                 formData = true;
                             }
 
-                            let functionName = this.getFuncationName(newApi);
+                            let functionName = this.getFunctionName(newApi);
 
                             if (functionName && tmpFunctionRD[functionName]) {
                                 functionName = `${functionName}_${(tmpFunctionRD[functionName] += 1)}`;
@@ -879,15 +885,14 @@ class ServiceGenerator {
     }
 
     // 将地址path路径转为大驼峰
-    private genDefaultFunctionName(path: string, pathBasePrefix: string) {
+    private genDefaultFunctionName(path: string) {
         // 首字母转大写
         function toUpperFirstLetter(text: string) {
             return text.charAt(0).toUpperCase() + text.slice(1);
         }
 
         return path
-            ?.replace(pathBasePrefix, '')
-            .split('/')
+            ?.split('/')
             .map((str) => {
                 /**
                  * 兼容错误命名如 /user/:id/:name

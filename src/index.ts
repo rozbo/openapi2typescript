@@ -10,6 +10,8 @@ import {mockGenerator} from './mockGenerator';
 import {ServiceGenerator} from './serviceGenerator';
 import {customResolveTypeName, ResolveTypeNameFunc, setCustomResolveTypeName} from "./name-helper";
 
+export type {APIDataType} from './serviceGenerator';
+export {getTypeLastName} from './name-helper'
 const getImportStatement = (requestLibPath: string) => {
     if (requestLibPath && requestLibPath.startsWith('import')) {
         return requestLibPath;
