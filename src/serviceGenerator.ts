@@ -346,7 +346,10 @@ class ServiceGenerator {
         return c.length > 0 ? c : null;
     };
 
-    public getFunctionName(data: APIDataType) {
+    public getFunctionName(origData: APIDataType) {
+        // 拷贝一份，防止hook里修改了值导致外面的问题
+        // 比如把api地址改错了 /笑哭
+        const data = {...origData}
         // 尝试执行这个hook，如果它返回的有值，则直接使用
         // 如果它没有返回值，则当作它只是修改参数,或者调试输出
         if (this.config.hook && this.config.hook.customFunctionName) {
