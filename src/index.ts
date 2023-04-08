@@ -51,12 +51,14 @@ export type GenerateServiceProps = {
     projectName?: string;
 
     hook?: {
+        onApiDataRaw?: (newApi: OperationObject)=>void;
         /** 自定义函数名称 */
         customFunctionName?: (data: OperationObject) => string;
         /** 自定义类型名称 */
         customTypeName?: (data: OperationObject) => string;
         /** 自定义类名 */
         customClassName?: (tagName: string) => string;
+
     };
     namespace?: string;
 

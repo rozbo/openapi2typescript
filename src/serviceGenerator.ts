@@ -387,6 +387,7 @@ class ServiceGenerator {
                     .map((api) => {
                         const newApi = api;
                         try {
+                            this.config.hook?.onApiDataRaw?.(newApi);
                             const allParams = this.getParamsTP(newApi.parameters, newApi.path);
                             const body = this.getBodyTP(newApi.requestBody);
                             const response = this.getResponseTP(newApi.responses);
